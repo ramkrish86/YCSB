@@ -710,6 +710,7 @@ public class Client
 			DB db=null;
 			try
 			{
+				System.err.println("db name is "+dbname);
 				db=DBFactory.newDB(dbname,props);
 			}
 			catch (UnknownDBException e)

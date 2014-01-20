@@ -120,7 +120,7 @@ public class DynamoDBClient extends DB {
 
     @Override
     public int read(String table, String key, Set<String> fields,
-            HashMap<String, ByteIterator> result) {
+            HashMap<String, ByteIterator> result, int keynum) {
 
         logger.debug("readkey: " + key + " from table: " + table);
         GetItemRequest req = new GetItemRequest(table, createPrimaryKey(key));
@@ -148,7 +148,7 @@ public class DynamoDBClient extends DB {
 
     @Override
     public int scan(String table, String startkey, int recordcount,
-        Set<String> fields, Vector<HashMap<String, ByteIterator>> result) {
+        Set<String> fields, Vector<HashMap<String, ByteIterator>> result, int keynum) {
         logger.debug("scan " + recordcount + " records from key: " + startkey + " on table: " + table);
         /*
          * on DynamoDB's scan, startkey is *exclusive* so we need to
@@ -206,7 +206,7 @@ public class DynamoDBClient extends DB {
     }
 
     @Override
-    public int update(String table, String key, HashMap<String, ByteIterator> values) {
+    public int update(String table, String key, HashMap<String, ByteIterator> values, int keynum) {
         logger.debug("updatekey: " + key + " from table: " + table);
 
         Map<String, AttributeValueUpdate> attributes = new HashMap<String, AttributeValueUpdate>(
@@ -232,7 +232,7 @@ public class DynamoDBClient extends DB {
     }
 
     @Override
-    public int insert(String table, String key,HashMap<String, ByteIterator> values) {
+    public int insert(String table, String key,HashMap<String, ByteIterator> values, int keynum) {
         logger.debug("insertkey: " + primaryKeyName + "-" + key + " from table: " + table);
         Map<String, AttributeValue> attributes = createAttributes(values);
         // adding primary key

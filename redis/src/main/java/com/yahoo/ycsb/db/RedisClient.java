@@ -71,7 +71,7 @@ public class RedisClient extends DB {
 
     @Override
     public int read(String table, String key, Set<String> fields,
-            HashMap<String, ByteIterator> result) {
+            HashMap<String, ByteIterator> result, int keynum) {
         if (fields == null) {
             StringByteIterator.putAllAsByteIterators(result, jedis.hgetAll(key));
         }
@@ -92,7 +92,7 @@ public class RedisClient extends DB {
     }
 
     @Override
-    public int insert(String table, String key, HashMap<String, ByteIterator> values) {
+    public int insert(String table, String key, HashMap<String, ByteIterator> values, int keynum) {
         if (jedis.hmset(key, StringByteIterator.getStringMap(values)).equals("OK")) {
             jedis.zadd(INDEX_KEY, hash(key), key);
             return 0;
@@ -108,20 +108,20 @@ public class RedisClient extends DB {
     }
 
     @Override
-    public int update(String table, String key, HashMap<String, ByteIterator> values) {
+    public int update(String table, String key, HashMap<String, ByteIterator> values, int keynum) {
         return jedis.hmset(key, StringByteIterator.getStringMap(values)).equals("OK") ? 0 : 1;
     }
 
     @Override
     public int scan(String table, String startkey, int recordcount,
-            Set<String> fields, Vector<HashMap<String, ByteIterator>> result) {
+            Set<String> fields, Vector<HashMap<String, ByteIterator>> result, int keynum) {
         Set<String> keys = jedis.zrangeByScore(INDEX_KEY, hash(startkey),
                                 Double.POSITIVE_INFINITY, 0, recordcount);
 
         HashMap<String, ByteIterator> values;
         for (String key : keys) {
             values = new HashMap<String, ByteIterator>();
-            read(table, key, fields, values);
+            read(table, key, fields, values, keynum);
             result.add(values);
         }
 

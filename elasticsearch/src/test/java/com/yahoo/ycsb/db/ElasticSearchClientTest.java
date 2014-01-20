@@ -49,8 +49,8 @@ public class ElasticSearchClientTest {
 
     @BeforeMethod
     public void setUp() {
-        instance.insert(MOCK_TABLE, MOCK_KEY1, MOCK_DATA);
-        instance.insert(MOCK_TABLE, MOCK_KEY2, MOCK_DATA);
+        instance.insert(MOCK_TABLE, MOCK_KEY1, MOCK_DATA, 0);
+        instance.insert(MOCK_TABLE, MOCK_KEY2, MOCK_DATA, 0);
     }
 
     @AfterMethod
@@ -66,7 +66,7 @@ public class ElasticSearchClientTest {
     public void testInsert() {
         System.out.println("insert");
         int expResult = 0;
-        int result = instance.insert(MOCK_TABLE, MOCK_KEY0, MOCK_DATA);
+        int result = instance.insert(MOCK_TABLE, MOCK_KEY0, MOCK_DATA, 0);
         assertEquals(expResult, result);
     }
 
@@ -90,7 +90,7 @@ public class ElasticSearchClientTest {
         Set<String> fields = MOCK_DATA.keySet();
         HashMap<String, ByteIterator> resultParam = new HashMap<String, ByteIterator>(10);
         int expResult = 0;
-        int result = instance.read(MOCK_TABLE, MOCK_KEY1, fields, resultParam);
+        int result = instance.read(MOCK_TABLE, MOCK_KEY1, fields, resultParam, 0);
         assertEquals(expResult, result);
     }
 
@@ -108,12 +108,12 @@ public class ElasticSearchClientTest {
         }
 
         int expResult = 0;
-        int result = instance.update(MOCK_TABLE, MOCK_KEY1, newValues);
+        int result = instance.update(MOCK_TABLE, MOCK_KEY1, newValues, 0);
         assertEquals(expResult, result);
 
         //validate that the values changed
         HashMap<String, ByteIterator> resultParam = new HashMap<String, ByteIterator>(10);
-        instance.read(MOCK_TABLE, MOCK_KEY1, MOCK_DATA.keySet(), resultParam);
+        instance.read(MOCK_TABLE, MOCK_KEY1, MOCK_DATA.keySet(), resultParam, 0);
 
         for (i = 1; i <= 10; i++) {
             assertEquals("newvalue" + i, resultParam.get("field" + i).toString());
@@ -131,7 +131,7 @@ public class ElasticSearchClientTest {
         Set<String> fields = MOCK_DATA.keySet();
         Vector<HashMap<String, ByteIterator>> resultParam = new Vector<HashMap<String, ByteIterator>>(10);
         int expResult = 0;
-        int result = instance.scan(MOCK_TABLE, MOCK_KEY1, recordcount, fields, resultParam);
+        int result = instance.scan(MOCK_TABLE, MOCK_KEY1, recordcount, fields, resultParam, 0);
         assertEquals(expResult, result);
     }
 }

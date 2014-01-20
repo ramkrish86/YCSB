@@ -202,7 +202,7 @@ public class CassandraClient10 extends DB
    *          A HashMap of field/value pairs for the result
    * @return Zero on success, a non-zero error code on error
    */
-  public int read(String table, String key, Set<String> fields, HashMap<String, ByteIterator> result)
+  public int read(String table, String key, Set<String> fields, HashMap<String, ByteIterator> result, int keynum)
   {
     if (!_table.equals(table)) {
       try
@@ -306,7 +306,7 @@ public class CassandraClient10 extends DB
    * @return Zero on success, a non-zero error code on error
    */
   public int scan(String table, String startkey, int recordcount, Set<String> fields,
-      Vector<HashMap<String, ByteIterator>> result)
+      Vector<HashMap<String, ByteIterator>> result, int keynum)
   {
     if (!_table.equals(table)) {
       try
@@ -411,9 +411,9 @@ public class CassandraClient10 extends DB
    *          A HashMap of field/value pairs to update in the record
    * @return Zero on success, a non-zero error code on error
    */
-  public int update(String table, String key, HashMap<String, ByteIterator> values)
+  public int update(String table, String key, HashMap<String, ByteIterator> values, int keynum)
   {
-    return insert(table, key, values);
+    return insert(table, key, values, keynum);
   }
 
   /**
@@ -429,7 +429,7 @@ public class CassandraClient10 extends DB
    *          A HashMap of field/value pairs to insert in the record
    * @return Zero on success, a non-zero error code on error
    */
-  public int insert(String table, String key, HashMap<String, ByteIterator> values)
+  public int insert(String table, String key, HashMap<String, ByteIterator> values, int keynum)
   {
     if (!_table.equals(table)) {
       try
@@ -582,7 +582,7 @@ public class CassandraClient10 extends DB
     vals.put("age", new StringByteIterator("57"));
     vals.put("middlename", new StringByteIterator("bradley"));
     vals.put("favoritecolor", new StringByteIterator("blue"));
-    int res = cli.insert("usertable", "BrianFrankCooper", vals);
+    int res = cli.insert("usertable", "BrianFrankCooper", vals, 0);
     System.out.println("Result of insert: " + res);
 
     HashMap<String, ByteIterator> result = new HashMap<String, ByteIterator>();
@@ -590,7 +590,7 @@ public class CassandraClient10 extends DB
     fields.add("middlename");
     fields.add("age");
     fields.add("favoritecolor");
-    res = cli.read("usertable", "BrianFrankCooper", null, result);
+    res = cli.read("usertable", "BrianFrankCooper", null, result, 0);
     System.out.println("Result of read: " + res);
     for (String s : result.keySet())
     {

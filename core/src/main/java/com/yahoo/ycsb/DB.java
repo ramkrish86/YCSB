@@ -90,7 +90,7 @@ public abstract class DB
 	 * @param result A HashMap of field/value pairs for the result
 	 * @return Zero on success, a non-zero error code on error or "not found".
 	 */
-	public abstract int read(String table, String key, Set<String> fields, HashMap<String,ByteIterator> result);
+	public abstract int read(String table, String key, Set<String> fields, HashMap<String,ByteIterator> result, int keynum);
 
 	/**
 	 * Perform a range scan for a set of records in the database. Each field/value pair from the result will be stored in a HashMap.
@@ -102,7 +102,7 @@ public abstract class DB
 	 * @param result A Vector of HashMaps, where each HashMap is a set field/value pairs for one record
 	 * @return Zero on success, a non-zero error code on error.  See this class's description for a discussion of error codes.
 	 */
-	public abstract int scan(String table, String startkey, int recordcount, Set<String> fields, Vector<HashMap<String,ByteIterator>> result);
+	public abstract int scan(String table, String startkey, int recordcount, Set<String> fields, Vector<HashMap<String,ByteIterator>> result, int keynum);
 	
 	/**
 	 * Update a record in the database. Any field/value pairs in the specified values HashMap will be written into the record with the specified
@@ -113,8 +113,8 @@ public abstract class DB
 	 * @param values A HashMap of field/value pairs to update in the record
 	 * @return Zero on success, a non-zero error code on error.  See this class's description for a discussion of error codes.
 	 */
-	public abstract int update(String table, String key, HashMap<String,ByteIterator> values);
-
+	public abstract int update(String table, String key, HashMap<String,ByteIterator> values, int keynum);
+	
 	/**
 	 * Insert a record in the database. Any field/value pairs in the specified values HashMap will be written into the record with the specified
 	 * record key.
@@ -124,7 +124,7 @@ public abstract class DB
 	 * @param values A HashMap of field/value pairs to insert in the record
 	 * @return Zero on success, a non-zero error code on error.  See this class's description for a discussion of error codes.
 	 */
-	public abstract int insert(String table, String key, HashMap<String,ByteIterator> values);
+	public abstract int insert(String table, String key, HashMap<String,ByteIterator> values, int keynum);
 
 	/**
 	 * Delete a record from the database. 

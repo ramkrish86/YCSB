@@ -294,7 +294,7 @@ public class CommandLine
 		  }
 		  
 		  HashMap<String,ByteIterator> result=new HashMap<String,ByteIterator>();
-		  int ret=db.read(table,tokens[1],fields,result);
+		  int ret=db.read(table,tokens[1],fields,result, 0);
 		  System.out.println("Return code: "+ret);
 		  for (Map.Entry<String,ByteIterator> ent : result.entrySet())
 		  {
@@ -323,7 +323,7 @@ public class CommandLine
 		  }
 		  
 		  Vector<HashMap<String,ByteIterator>> results=new Vector<HashMap<String,ByteIterator>>();
-		  int ret=db.scan(table,tokens[1],Integer.parseInt(tokens[2]),fields,results);
+		  int ret=db.scan(table,tokens[1],Integer.parseInt(tokens[2]),fields,results, 0);
 		  System.out.println("Return code: "+ret);
 		  int record=0;
 		  if (results.size()==0)
@@ -361,7 +361,7 @@ public class CommandLine
 		     values.put(nv[0],new StringByteIterator(nv[1]));
 		  }
 
-		  int ret=db.update(table,tokens[1],values);
+		  int ret=db.update(table,tokens[1],values, 0);
 		  System.out.println("Return code: "+ret);
 	       }		  
 	    }
@@ -381,7 +381,7 @@ public class CommandLine
 		     values.put(nv[0],new StringByteIterator(nv[1]));
 		  }
 
-		  int ret=db.insert(table,tokens[1],values);
+		  int ret=db.insert(table,tokens[1],values, 0);
 		  System.out.println("Return code: "+ret);
 	       }		  
 	    }

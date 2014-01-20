@@ -56,7 +56,7 @@ public class InfinispanClient extends DB {
       infinispanManager = null;
    }
 
-   public int read(String table, String key, Set<String> fields, HashMap<String, ByteIterator> result) {
+   public int read(String table, String key, Set<String> fields, HashMap<String, ByteIterator> result, int keynum) {
       try {
          Map<String, String> row;
          if (clustered) {
@@ -79,12 +79,12 @@ public class InfinispanClient extends DB {
       }
    }
 
-   public int scan(String table, String startkey, int recordcount, Set<String> fields, Vector<HashMap<String, ByteIterator>> result) {
+   public int scan(String table, String startkey, int recordcount, Set<String> fields, Vector<HashMap<String, ByteIterator>> result, int keynum) {
       logger.warn("Infinispan does not support scan semantics");
       return OK;
    }
 
-   public int update(String table, String key, HashMap<String, ByteIterator> values) {
+   public int update(String table, String key, HashMap<String, ByteIterator> values, int keynum) {
       try {
          if (clustered) {
             AtomicMap<String, String> row = AtomicMapLookup.getAtomicMap(infinispanManager.getCache(table), key);
@@ -106,7 +106,7 @@ public class InfinispanClient extends DB {
       }
    }
 
-   public int insert(String table, String key, HashMap<String, ByteIterator> values) {
+   public int insert(String table, String key, HashMap<String, ByteIterator> values, int keynum) {
       try {
          if (clustered) {
             AtomicMap<String, String> row = AtomicMapLookup.getAtomicMap(infinispanManager.getCache(table), key);

@@ -69,7 +69,7 @@ public class VoldemortClient extends DB {
 	}
 
 	@Override
-	public int insert(String table, String key, HashMap<String, ByteIterator> values) {
+	public int insert(String table, String key, HashMap<String, ByteIterator> values, int keynum) {
 		if ( checkStore(table) == ERROR ) {
 			return ERROR;
 		}
@@ -79,7 +79,7 @@ public class VoldemortClient extends DB {
 
 	@Override
 	public int read(String table, String key, Set<String> fields,
-			HashMap<String, ByteIterator> result) {
+			HashMap<String, ByteIterator> result, int keynum) {
 		if ( checkStore(table) == ERROR ) {
 			return ERROR;
 		}
@@ -103,13 +103,13 @@ public class VoldemortClient extends DB {
 
 	@Override
 	public int scan(String table, String startkey, int recordcount,
-			Set<String> fields, Vector<HashMap<String, ByteIterator>> result) {
+			Set<String> fields, Vector<HashMap<String, ByteIterator>> result, int keynum) {
 		logger.warn("Voldemort does not support Scan semantics");
 		return OK;
 	}
 
 	@Override
-	public int update(String table, String key, HashMap<String, ByteIterator> values) {
+	public int update(String table, String key, HashMap<String, ByteIterator> values, int keynum) {
 		if ( checkStore(table) == ERROR ) {
 			return ERROR;
 		}

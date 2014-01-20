@@ -123,7 +123,7 @@ public class HypertableClient extends com.yahoo.ycsb.DB
      */
     @Override
     public int read(String table, String key, Set<String> fields, 
-                    HashMap<String, ByteIterator> result)
+                    HashMap<String, ByteIterator> result, int keynum)
     {
         //SELECT _column_family:field[i] 
         //  FROM table WHERE ROW=key MAX_VERSIONS 1;
@@ -138,7 +138,7 @@ public class HypertableClient extends com.yahoo.ycsb.DB
             if (null != fields) {
                 Vector<HashMap<String, ByteIterator>> resMap = 
                         new Vector<HashMap<String, ByteIterator>>();
-                if (0 != scan(table, key, 1, fields, resMap)) {
+                if (0 != scan(table, key, 1, fields, resMap, keynum)) {
                     return SERVERERROR;
                 }
                 if (!resMap.isEmpty())
@@ -180,7 +180,7 @@ public class HypertableClient extends com.yahoo.ycsb.DB
     @Override
     public int scan(String table, String startkey, int recordcount, 
                     Set<String> fields, 
-                    Vector<HashMap<String, ByteIterator>> result)
+                    Vector<HashMap<String, ByteIterator>> result, int keynum)
     {
         //SELECT _columnFamily:fields FROM table WHERE (ROW >= startkey) 
         //    LIMIT recordcount MAX_VERSIONS 1;
@@ -252,9 +252,9 @@ public class HypertableClient extends com.yahoo.ycsb.DB
      */
     @Override
     public int update(String table, String key, 
-            HashMap<String, ByteIterator> values)
+            HashMap<String, ByteIterator> values, int keynum)
     {
-        return insert(table, key, values);
+        return insert(table, key, values, keynum);
     }
 
     /**
@@ -269,7 +269,7 @@ public class HypertableClient extends com.yahoo.ycsb.DB
      */
     @Override
     public int insert(String table, String key, 
-            HashMap<String, ByteIterator> values)
+            HashMap<String, ByteIterator> values, int keynum)
     {
         //INSERT INTO table VALUES 
         //  (key, _column_family:entry,getKey(), entry.getValue()), (...);

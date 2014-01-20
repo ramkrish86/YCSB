@@ -105,7 +105,7 @@ public class ElasticSearchClient extends DB {
      * description for a discussion of error codes.
      */
     @Override
-    public int insert(String table, String key, HashMap<String, ByteIterator> values) {
+    public int insert(String table, String key, HashMap<String, ByteIterator> values, int keynum) {
         try {
             final XContentBuilder doc = jsonBuilder().startObject();
 
@@ -159,7 +159,7 @@ public class ElasticSearchClient extends DB {
      * @return Zero on success, a non-zero error code on error or "not found".
      */
     @Override
-    public int read(String table, String key, Set<String> fields, HashMap<String, ByteIterator> result) {
+    public int read(String table, String key, Set<String> fields, HashMap<String, ByteIterator> result, int keynum) {
         try {
             final GetResponse response = client.prepareGet(indexKey, table, key)
                     .execute()
@@ -195,7 +195,7 @@ public class ElasticSearchClient extends DB {
      * description for a discussion of error codes.
      */
     @Override
-    public int update(String table, String key, HashMap<String, ByteIterator> values) {
+    public int update(String table, String key, HashMap<String, ByteIterator> values, int keynum) {
         try {
             final GetResponse response = client.prepareGet(indexKey, table, key)
                     .execute()
@@ -234,7 +234,7 @@ public class ElasticSearchClient extends DB {
      * description for a discussion of error codes.
      */
     @Override
-    public int scan(String table, String startkey, int recordcount, Set<String> fields, Vector<HashMap<String, ByteIterator>> result) {
+    public int scan(String table, String startkey, int recordcount, Set<String> fields, Vector<HashMap<String, ByteIterator>> result, int keynum) {
         try {
             final RangeFilterBuilder filter = rangeFilter("_id").gte(startkey);
             final SearchResponse response = client.prepareSearch(indexKey)

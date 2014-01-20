@@ -112,7 +112,7 @@ public class MapKeeperClient extends DB {
 
     @Override
     public int read(String table, String key, Set<String> fields,
-            HashMap<String, ByteIterator> result) {
+            HashMap<String, ByteIterator> result, int keynum) {
         try {
             ByteBuffer buf = bufStr(key);
 
@@ -135,7 +135,7 @@ public class MapKeeperClient extends DB {
 
     @Override
     public int scan(String table, String startkey, int recordcount,
-            Set<String> fields, Vector<HashMap<String, ByteIterator>> result) {
+            Set<String> fields, Vector<HashMap<String, ByteIterator>> result, int keynum) {
         try {
             //XXX what to pass in for nulls / zeros?
             RecordListResponse res = c.scan(table, ScanOrder.Ascending, bufStr(startkey), true, null, false, recordcount, 0);
@@ -160,11 +160,11 @@ public class MapKeeperClient extends DB {
 
     @Override
     public int update(String table, String key,
-            HashMap<String, ByteIterator> values) {
+            HashMap<String, ByteIterator> values, int keynum) {
         try {
             if(!writeallfields) {
                 HashMap<String, ByteIterator> oldval = new HashMap<String, ByteIterator>();
-                read(table, key, null, oldval);
+                read(table, key, null, oldval, keynum);
                 for(String k: values.keySet()) {
                     oldval.put(k, values.get(k));
                 }
@@ -180,7 +180,7 @@ public class MapKeeperClient extends DB {
 
     @Override
     public int insert(String table, String key,
-            HashMap<String, ByteIterator> values) {
+            HashMap<String, ByteIterator> values, int keynum) {
         try {
             int ret = ycsbThriftRet(c.insert(table, bufStr(key), encode(values)), ResponseCode.Success, ResponseCode.RecordExists);
             return ret;

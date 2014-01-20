@@ -74,6 +74,8 @@ public class CoreWorkload extends Workload
 	public static final String TABLENAME_PROPERTY_DEFAULT="usertable";
 
 	public static String table;
+	
+	public static boolean acl;
 
 
 	/**
@@ -253,6 +255,14 @@ public class CoreWorkload extends Workload
    */
   public static final String HOTSPOT_OPN_FRACTION = "hotspotopnfraction";
   
+  public static final String ACL_OPTION_PROPERTY = "useAclOption";
+  public static final String ACL_USAGE_DEFAULT ="false";
+  public static final String USER_OPTION_LIST = "userList";
+  public static final String USER_LIST_DEFAULT = "user1, user2, user3, user4, user5";
+  public static final String userOwner = "owner";
+  
+  public static String[] users;
+  
   /**
    * Default value of the percentage operations accessing the hot set.
    */
@@ -418,6 +428,12 @@ public class CoreWorkload extends Workload
 		{
 			throw new WorkloadException("Distribution \""+scanlengthdistrib+"\" not allowed for scan length");
 		}
+		
+		acl=Boolean.parseBoolean(p.getProperty(ACL_OPTION_PROPERTY,ACL_USAGE_DEFAULT));
+		if(acl) {
+			String property = p.getProperty(USER_OPTION_LIST, USER_LIST_DEFAULT);
+			users = property.split(",");
+		}
 	}
 
 	public String buildKeyName(long keynum) {
@@ -458,7 +474,7 @@ public class CoreWorkload extends Workload
 		int keynum=keysequence.nextInt();
 		String dbkey = buildKeyName(keynum);
 		HashMap<String, ByteIterator> values = buildValues();
-		if (db.insert(table,dbkey,values) == 0)
+		if (db.insert(table,dbkey,values, keynum) == 0)
 			return true;
 		else
 			return false;
@@ -520,7 +536,6 @@ public class CoreWorkload extends Workload
 	{
 		//choose a random key
 		int keynum = nextKeynum();
-		
 		String keyname = buildKeyName(keynum);
 		
 		HashSet<String> fields=null;
@@ -534,7 +549,7 @@ public class CoreWorkload extends Workload
 			fields.add(fieldname);
 		}
 
-		db.read(table,keyname,fields,new HashMap<String,ByteIterator>());
+		db.read(table,keyname,fields,new HashMap<String,ByteIterator>(), keynum);
 	}
 	
 	public void doTransactionReadModifyWrite(DB db)
@@ -572,9 +587,9 @@ public class CoreWorkload extends Workload
 		
 		long st=System.nanoTime();
 
-		db.read(table,keyname,fields,new HashMap<String,ByteIterator>());
+		db.read(table,keyname,fields,new HashMap<String,ByteIterator>(), keynum);
 		
-		db.update(table,keyname,values);
+		db.update(table,keyname,values, keynum);
 
 		long en=System.nanoTime();
 		
@@ -602,14 +617,13 @@ public class CoreWorkload extends Workload
 			fields.add(fieldname);
 		}
 
-		db.scan(table,startkeyname,len,fields,new Vector<HashMap<String,ByteIterator>>());
+		db.scan(table,startkeyname,len,fields,new Vector<HashMap<String,ByteIterator>>(), keynum);
 	}
 
 	public void doTransactionUpdate(DB db)
 	{
 		//choose a random key
 		int keynum = nextKeynum();
-
 		String keyname=buildKeyName(keynum);
 
 		HashMap<String,ByteIterator> values;
@@ -625,17 +639,16 @@ public class CoreWorkload extends Workload
 		   values = buildUpdate();
 		}
 
-		db.update(table,keyname,values);
+		db.update(table,keyname,values, keynum);
 	}
 
 	public void doTransactionInsert(DB db)
 	{
 		//choose the next key
 		int keynum=transactioninsertkeysequence.nextInt();
-
 		String dbkey = buildKeyName(keynum);
 
 		HashMap<String, ByteIterator> values = buildValues();
-		db.insert(table,dbkey,values);
+		db.insert(table,dbkey,values, keynum);
 	}
 }

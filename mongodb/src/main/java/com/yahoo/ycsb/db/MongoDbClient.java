@@ -190,7 +190,7 @@ public class MongoDbClient extends DB {
      */
     @Override
     public int insert(String table, String key,
-            HashMap<String, ByteIterator> values) {
+            HashMap<String, ByteIterator> values, int keynum) {
         com.mongodb.DB db = null;
         try {
             db = mongo.getDB(database);
@@ -228,7 +228,7 @@ public class MongoDbClient extends DB {
     @Override
     @SuppressWarnings("unchecked")
     public int read(String table, String key, Set<String> fields,
-            HashMap<String, ByteIterator> result) {
+            HashMap<String, ByteIterator> result, int keynum) {
         com.mongodb.DB db = null;
         try {
             db = mongo.getDB(database);
@@ -278,7 +278,7 @@ public class MongoDbClient extends DB {
      */
     @Override
     public int update(String table, String key,
-            HashMap<String, ByteIterator> values) {
+            HashMap<String, ByteIterator> values, int keynum) {
         com.mongodb.DB db = null;
         try {
             db = mongo.getDB(database);
@@ -323,7 +323,7 @@ public class MongoDbClient extends DB {
      */
     @Override
     public int scan(String table, String startkey, int recordcount,
-            Set<String> fields, Vector<HashMap<String, ByteIterator>> result) {
+            Set<String> fields, Vector<HashMap<String, ByteIterator>> result, int keynum) {
         com.mongodb.DB db = null;
         try {
             db = mongo.getDB(database);
